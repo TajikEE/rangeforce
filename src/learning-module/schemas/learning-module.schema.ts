@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
-import { Category } from 'src/category/entities/category.entity';
 
 export type LearningModuleDocument = HydratedDocument<LearningModule>;
 
@@ -16,7 +15,7 @@ export class LearningModule {
   difficulty: string;
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-  categories: Category[];
+  categoryIds: Types.ObjectId[];
 }
 
 export const LearningModuleSchema =
