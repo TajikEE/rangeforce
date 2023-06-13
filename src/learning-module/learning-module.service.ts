@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
 import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
 import { LearningModule } from './schemas/learning-module.schema';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class LearningModuleService {
@@ -12,9 +13,14 @@ export class LearningModuleService {
     private learningModuleModel: Model<LearningModule>,
   ) {}
   async create(createLearningModuleDto: CreateLearningModuleDto) {
-    const createdLearningModule = new this.learningModuleModel(
-      createLearningModuleDto,
-    );
+    const createdLearningModule = new this.learningModuleModel({
+      name: createLearningModuleDto.name,
+      description: createLearningModuleDto.description,
+      difficulty: createLearningModuleDto.difficulty,
+      categoryIds: createLearningModuleDto.categoryIds.map(
+        (id) => new Types.ObjectId(id),
+      ),
+    });
     return await createdLearningModule.save();
   }
 
