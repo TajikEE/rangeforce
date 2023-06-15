@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { LearningModuleService } from './learning-module.service';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
-import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
 
 @Controller('learning-module')
 export class LearningModuleController {
@@ -28,14 +19,6 @@ export class LearningModuleController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.learningModuleService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateLearningModuleDto: UpdateLearningModuleDto,
-  ) {
-    return this.learningModuleService.update(+id, updateLearningModuleDto);
   }
 
   @Delete(':id')

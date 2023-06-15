@@ -8,8 +8,8 @@ export class Course {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
-  description: string;
+  @Prop()
+  description?: string;
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'LearningModule' }] })
   learningModuleIds: Types.ObjectId[];
