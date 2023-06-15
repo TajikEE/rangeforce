@@ -15,7 +15,7 @@ export class Course {
   learningModuleIds: Types.ObjectId[];
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-  categoryIds: Types.ObjectId[];
+  categoryIds?: Types.ObjectId[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

@@ -15,7 +15,7 @@ export class LearningModule {
   difficulty: string;
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-  categoryIds: Types.ObjectId[];
+  categoryIds?: Types.ObjectId[];
 }
 
 export const LearningModuleSchema =

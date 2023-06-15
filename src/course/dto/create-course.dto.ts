@@ -12,7 +12,7 @@ export class CreateCourseDto {
   @IsArray()
   learningModuleIds: string[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
-  categoryIds: string[];
+  categoryIds?: string[];
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
 import { LearningModule } from './schemas/learning-module.schema';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class LearningModuleService {
@@ -16,11 +16,30 @@ export class LearningModuleService {
       name: createLearningModuleDto.name,
       description: createLearningModuleDto.description,
       difficulty: createLearningModuleDto.difficulty,
-      categoryIds: createLearningModuleDto.categoryIds.map(
-        (id) => new Types.ObjectId(id),
-      ),
+      ...(createLearningModuleDto.categoryIds && {
+        categoryIds: createLearningModuleDto.categoryIds.map(
+          (_id) => new Types.ObjectId(_id),
+        ),
+      }),
     });
     return await createdLearningModule.save();
+  }
+
+  async update(_id: string, updateLearningModuleDto: UpdateLearningModuleDto) {
+    return await this.learningModuleModel.findByIdAndUpdate(
+      _id,
+      {
+        name: updateLearningModuleDto.name,
+        description: updateLearningModuleDto.description,
+        difficulty: updateLearningModuleDto.difficulty,
+        ...(updateLearningModuleDto.categoryIds && {
+          categoryIds: updateLearningModuleDto.categoryIds.map(
+            (_id) => new Types.ObjectId(_id),
+          ),
+        }),
+      },
+      { new: true },
+    );
   }
 
   async getLearningModulesByCategory(categoryName: string): Promise<any[]> {

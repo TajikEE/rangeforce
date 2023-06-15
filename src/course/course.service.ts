@@ -3,7 +3,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { Course } from './schemas/course.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class CourseService {
@@ -17,7 +17,11 @@ export class CourseService {
       name: createCourseDto.name,
       description: createCourseDto.description,
       learningModuleIds: createCourseDto.learningModuleIds,
-      categoryIds: createCourseDto.categoryIds,
+      ...(createCourseDto.categoryIds && {
+        categoryIds: createCourseDto.categoryIds.map(
+          (_id) => new Types.ObjectId(_id),
+        ),
+      }),
     });
     return await createdCourse.save();
   }

@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateLearningModuleDto {
   @IsString()
   @IsNotEmpty()
@@ -13,6 +13,6 @@ export class CreateLearningModuleDto {
   difficulty: string;
 
   @IsArray()
-  @IsNotEmpty()
-  categoryIds: string[];
+  @IsOptional()
+  categoryIds?: string[];
 }
