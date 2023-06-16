@@ -15,5 +15,6 @@ import {
   ],
   controllers: [LearningModuleController],
   providers: [LearningModuleService],
+  exports: [LearningModuleService],
 })
 export class LearningModuleModule {}

@@ -12,7 +12,7 @@ export class CreateLearningModuleDto {
   @IsNotEmpty()
   difficulty: string;
 
-  @IsArray()
   @IsOptional()
+  @IsArray()
   categoryIds?: string[];
 }

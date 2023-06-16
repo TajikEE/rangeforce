@@ -25,6 +25,23 @@ export class LearningModuleService {
     return await createdLearningModule.save();
   }
 
+  async updateLearningModuleCategories(
+    learningModuleIds: Types.ObjectId[],
+    categoryIds: Types.ObjectId[],
+  ): Promise<void> {
+    const learningModules = await this.learningModuleModel
+      .find({
+        _id: { $in: learningModuleIds },
+      })
+      .exec();
+    learningModules.forEach(async (module) => {
+      await this.learningModuleModel.updateOne(
+        { _id: module._id },
+        { $addToSet: { categoryIds: { $each: categoryIds } } },
+      );
+    });
+  }
+
   async update(_id: string, updateLearningModuleDto: UpdateLearningModuleDto) {
     return await this.learningModuleModel.findByIdAndUpdate(
       _id,
