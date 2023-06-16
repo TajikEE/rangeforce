@@ -6,7 +6,7 @@ export type UsageDocument = HydratedDocument<Usage>;
 @Schema({ timestamps: true })
 export class Usage {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'LearningModule' })
-  moduleId: string;
+  learningModuleId: string;
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   userId: string;

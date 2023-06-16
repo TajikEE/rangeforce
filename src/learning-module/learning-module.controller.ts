@@ -28,6 +28,13 @@ export class LearningModuleController {
     return this.learningModuleService.update(_id, updateLearningModuleDto);
   }
 
+  @Get('category/:name')
+  findByCategoryName(@Param('name') name: string) {
+    return this.learningModuleService.findByCategoryName(name);
+  }
+
+
+
   @Get()
   findAll() {
     return this.learningModuleService.findAll();

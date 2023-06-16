@@ -16,10 +16,8 @@ export class LearningModuleService {
       name: createLearningModuleDto.name,
       description: createLearningModuleDto.description,
       difficulty: createLearningModuleDto.difficulty,
-      ...(createLearningModuleDto.categoryIds && {
-        categoryIds: createLearningModuleDto.categoryIds.map(
-          (_id) => new Types.ObjectId(_id),
-        ),
+      ...(createLearningModuleDto.categoryNames && {
+        categoryNames: createLearningModuleDto.categoryNames,
       }),
     });
     return await createdLearningModule.save();
@@ -27,7 +25,7 @@ export class LearningModuleService {
 
   async updateLearningModuleCategories(
     learningModuleIds: Types.ObjectId[],
-    categoryIds: Types.ObjectId[],
+    categoryNames: string[],
   ): Promise<void> {
     const learningModules = await this.learningModuleModel
       .find({
@@ -37,7 +35,7 @@ export class LearningModuleService {
     learningModules.forEach(async (module) => {
       await this.learningModuleModel.updateOne(
         { _id: module._id },
-        { $addToSet: { categoryIds: { $each: categoryIds } } },
+        { $addToSet: { categoryNames: { $each: categoryNames } } },
       );
     });
   }
@@ -49,22 +47,20 @@ export class LearningModuleService {
         name: updateLearningModuleDto.name,
         description: updateLearningModuleDto.description,
         difficulty: updateLearningModuleDto.difficulty,
-        ...(updateLearningModuleDto.categoryIds && {
-          categoryIds: updateLearningModuleDto.categoryIds.map(
-            (_id) => new Types.ObjectId(_id),
-          ),
+        ...(updateLearningModuleDto.categoryNames && {
+          categoryNames: updateLearningModuleDto.categoryNames,
         }),
       },
       { new: true },
     );
   }
 
-  async getLearningModulesByCategory(categoryName: string): Promise<any[]> {
-    return;
-  }
+  async findByCategoryName(categoryName: string): Promise<any[]> {
+    const regex = new RegExp(categoryName, 'i'); // 'i' flag for case-insensitive match
 
-  async getTopTenUsedModulesOfMonth(): Promise<any[]> {
-    return;
+    return await this.learningModuleModel
+      .find({ categoryNames: { $regex: regex } })
+      .exec();
   }
 
   findAll() {

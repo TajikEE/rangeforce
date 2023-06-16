@@ -8,6 +8,8 @@ import {
   LearningModule,
   LearningModuleSchema,
 } from 'src/learning-module/schemas/learning-module.schema';
+import { CategoryService } from 'src/category/category.service';
+import { Category, CategorySchema } from 'src/category/schemas/category.schema';
 
 @Module({
   imports: [
@@ -15,8 +17,11 @@ import {
     MongooseModule.forFeature([
       { name: LearningModule.name, schema: LearningModuleSchema },
     ]),
+    MongooseModule.forFeature([
+      { name: Category.name, schema: CategorySchema },
+    ]),
   ],
   controllers: [CourseController],
-  providers: [CourseService, LearningModuleService],
+  providers: [CourseService, LearningModuleService, CategoryService],
 })
 export class CourseModule {}

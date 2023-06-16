@@ -20,6 +20,17 @@ export class CategoryService {
     return await createdCategory.save();
   }
 
+  async getCategoryNames(categoryIds: string[]): Promise<string[]> {
+    const categories = await this.categoryModel
+      .find({
+        _id: { $in: categoryIds },
+      })
+      .exec();
+
+    return categories.map((category) => category.name);
+  }
+
+
   findAll() {
     return `This action returns all category`;
   }

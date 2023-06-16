@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsageService } from './usage.service';
 import { CreateUsageDto } from './dto/create-usage.dto';
 import { UpdateUsageDto } from './dto/update-usage.dto';
+
 
 @Controller('usage')
 export class UsageController {
@@ -18,6 +20,11 @@ export class UsageController {
   @Post('/complete')
   create(@Body() createUsageDto: CreateUsageDto) {
     return this.usageService.create(createUsageDto);
+  }
+
+  @Get('top/:limit')
+  findTopUsedModulesOfMonth(@Param('limit', ParseIntPipe) limit: number) {
+    return this.usageService.findTopUsedModulesOfMonth(limit);
   }
 
   @Get()

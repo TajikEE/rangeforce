@@ -5,6 +5,7 @@ import { Course } from './schemas/course.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { LearningModuleService } from 'src/learning-module/learning-module.service';
+import { CategoryService } from 'src/category/category.service';
 
 @Injectable()
 export class CourseService {
@@ -12,6 +13,7 @@ export class CourseService {
     @InjectModel(Course.name)
     private courseModel: Model<Course>,
     private learningModuleService: LearningModuleService,
+    private categoryService: CategoryService,
   ) {}
 
   async create(createCourseDto: CreateCourseDto) {
@@ -27,9 +29,13 @@ export class CourseService {
     });
 
     if (createCourseDto.categoryIds) {
+      const categoryNames = await this.categoryService.getCategoryNames(
+        createCourseDto.categoryIds,
+      );
+
       this.learningModuleService.updateLearningModuleCategories(
         createCourseDto.learningModuleIds.map((_id) => new Types.ObjectId(_id)),
-        createCourseDto.categoryIds.map((_id) => new Types.ObjectId(_id)),
+        categoryNames,
       );
     }
     return await createdCourse.save();
