@@ -12,10 +12,7 @@ export class Course {
   description?: string;
 
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'LearningModule' }] })
-  learningModuleIds: Types.ObjectId[];
-
-  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Category' }] })
-  categoryIds?: Types.ObjectId[];
+  learningModuleIds?: Types.ObjectId[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

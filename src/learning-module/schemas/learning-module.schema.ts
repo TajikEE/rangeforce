@@ -10,13 +10,13 @@ export class LearningModule {
   name: string;
 
   @Prop()
-  description: string;
+  type: string;
 
   @Prop({ enum: DIFFICULTIES })
   difficulty: string;
 
   @Prop()
-  categoryNames?: string[];
+  description?: string;
 }
 
 export const LearningModuleSchema =

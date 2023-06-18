@@ -4,20 +4,31 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './schemas/category.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ResponseCategoryDto } from './dto/response-category.dto';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectModel(Category.name)
-    private categoryModel: Model<Category>,
+    private readonly categoryModel: Model<Category>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    const createdCategory = new this.categoryModel({
-      name: createCategoryDto.name,
-      description: createCategoryDto.description,
-    });
+  async create(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<ResponseCategoryDto> {
+    const createdCategory = new this.categoryModel(createCategoryDto);
     return await createdCategory.save();
+  }
+
+  async addCourseToCategory(
+    categoryId: string,
+    courseId: string,
+  ): Promise<ResponseCategoryDto> {
+    return await this.categoryModel.findOneAndUpdate(
+      { _id: categoryId },
+      { $addToSet: { courseIds: courseId } },
+      { new: true },
+    );
   }
 
   async getCategoryNames(categoryIds: string[]): Promise<string[]> {
@@ -29,7 +40,6 @@ export class CategoryService {
 
     return categories.map((category) => category.name);
   }
-
 
   findAll() {
     return `This action returns all category`;

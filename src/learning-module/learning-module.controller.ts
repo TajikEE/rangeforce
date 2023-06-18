@@ -6,21 +6,36 @@ import {
   Param,
   Delete,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { LearningModuleService } from './learning-module.service';
 import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
+import {
+  ApiTags,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
+import { ResponseLearningModuleDto } from './dto/response-learning-module.dto';
 
+@ApiTags('Learning module')
 @Controller('learning-module')
 export class LearningModuleController {
   constructor(private readonly learningModuleService: LearningModuleService) {}
 
   @Post()
-  create(@Body() createLearningModuleDto: CreateLearningModuleDto) {
+  @ApiBody({ type: CreateLearningModuleDto })
+  @ApiCreatedResponse({ type: ResponseLearningModuleDto })
+  create(
+    @Body() createLearningModuleDto: CreateLearningModuleDto,
+  ): Promise<ResponseLearningModuleDto> {
     return this.learningModuleService.create(createLearningModuleDto);
   }
 
   @Patch(':_id')
+  @ApiBody({ type: UpdateLearningModuleDto })
+  @ApiCreatedResponse({ type: ResponseLearningModuleDto })
   update(
     @Param('_id') _id: string,
     @Body() updateLearningModuleDto: UpdateLearningModuleDto,
@@ -28,25 +43,10 @@ export class LearningModuleController {
     return this.learningModuleService.update(_id, updateLearningModuleDto);
   }
 
-  @Get('category/:name')
-  findByCategoryName(@Param('name') name: string) {
-    return this.learningModuleService.findByCategoryName(name);
-  }
-
-
-
   @Get()
-  findAll() {
-    return this.learningModuleService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.learningModuleService.findOne(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.learningModuleService.remove(+id);
+  @ApiQuery({ name: 'categoryName', type: String })
+  @ApiCreatedResponse({ type: ResponseLearningModuleDto, isArray: true })
+  findByCategoryName(@Query('categoryName') categoryName: string) {
+    return this.learningModuleService.findByCategoryName(categoryName);
   }
 }

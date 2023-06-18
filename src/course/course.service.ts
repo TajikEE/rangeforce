@@ -4,41 +4,29 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { Course } from './schemas/course.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { LearningModuleService } from 'src/learning-module/learning-module.service';
-import { CategoryService } from 'src/category/category.service';
+import { ResponseCourseDto } from './dto/response-course.dto';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectModel(Course.name)
     private courseModel: Model<Course>,
-    private learningModuleService: LearningModuleService,
-    private categoryService: CategoryService,
   ) {}
 
   async create(createCourseDto: CreateCourseDto) {
-    const createdCourse = new this.courseModel({
-      name: createCourseDto.name,
-      description: createCourseDto.description,
-      learningModuleIds: createCourseDto.learningModuleIds,
-      ...(createCourseDto.categoryIds && {
-        categoryIds: createCourseDto.categoryIds.map(
-          (_id) => new Types.ObjectId(_id),
-        ),
-      }),
-    });
-
-    if (createCourseDto.categoryIds) {
-      const categoryNames = await this.categoryService.getCategoryNames(
-        createCourseDto.categoryIds,
-      );
-
-      this.learningModuleService.updateLearningModuleCategories(
-        createCourseDto.learningModuleIds.map((_id) => new Types.ObjectId(_id)),
-        categoryNames,
-      );
-    }
+    const createdCourse = new this.courseModel(createCourseDto);
     return await createdCourse.save();
+  }
+
+  async addLearningModuleToCourse(
+    courseId: string,
+    learningModuleId: string,
+  ): Promise<ResponseCourseDto> {
+    return await this.courseModel.findOneAndUpdate(
+      { _id: courseId },
+      { $addToSet: { learningModuleIds: learningModuleId } },
+      { new: true },
+    );
   }
 
   findAll() {
