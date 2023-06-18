@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { NotFoundException } from '@nestjs/common';
 import { LearningModuleService } from './learning-module.service';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
 import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
