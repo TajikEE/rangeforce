@@ -4,7 +4,7 @@ import { UpdateUsageDto } from './dto/update-usage.dto';
 import { Usage } from './schemas/usage.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LearningModule } from 'src/learning-module/schemas/learning-module.schema';
+import { LearningModule } from '../learning-module/schemas/learning-module.schema';
 
 @Injectable()
 export class UsageService {
@@ -17,11 +17,7 @@ export class UsageService {
   ) {}
 
   async create(createUsageDto: CreateUsageDto) {
-    const createdUsage = new this.usageModel({
-      learningModuleId: createUsageDto.learningModuleId,
-      userId: createUsageDto.userId,
-    });
-    return await createdUsage.save();
+    return await this.usageModel.create(createUsageDto);
   }
 
   async findTopUsedModulesOfMonth(limit: number): Promise<any[]> {

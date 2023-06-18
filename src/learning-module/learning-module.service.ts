@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
 import { CreateLearningModuleDto } from './dto/create-learning-module.dto';
 import { LearningModule } from './schemas/learning-module.schema';
 import { ResponseLearningModuleDto } from './dto/response-learning-module.dto';
-import { Category } from 'src/category/schemas/category.schema';
-import { Course } from 'src/course/schemas/course.schema';
+import { Category } from '../category/schemas/category.schema';
+import { Course } from '../course/schemas/course.schema';
 
 @Injectable()
 export class LearningModuleService {
@@ -21,10 +21,7 @@ export class LearningModuleService {
   async create(
     createLearningModuleDto: CreateLearningModuleDto,
   ): Promise<ResponseLearningModuleDto> {
-    const createdLearningModule = new this.learningModuleModel(
-      createLearningModuleDto,
-    );
-    return await createdLearningModule.save();
+    return await this.learningModuleModel.create(createLearningModuleDto);
   }
 
   async update(_id: string, updateLearningModuleDto: UpdateLearningModuleDto) {
@@ -52,7 +49,7 @@ export class LearningModuleService {
     });
 
     const learningModules = await this.learningModuleModel.find({
-      _id: { $in: courses.map((course) => course.learningModuleIds) },
+      _id: { $in: courses.flatMap((course) => course.learningModuleIds) },
     });
 
     if (!learningModules.length) {
