@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
 import { Course } from './schemas/course.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -14,18 +13,27 @@ export class CourseService {
   ) {}
 
   async create(createCourseDto: CreateCourseDto) {
-    const createdCourse = new this.courseModel(createCourseDto);
-    return await createdCourse.save();
+    try {
+      return await this.courseModel.create(createCourseDto);
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating course');
+    }
   }
 
   async addLearningModuleToCourse(
     courseId: string,
     learningModuleId: string,
   ): Promise<ResponseCourseDto> {
-    return await this.courseModel.findOneAndUpdate(
-      { _id: courseId },
-      { $addToSet: { learningModuleIds: learningModuleId } },
-      { new: true },
-    );
+    try {
+      return await this.courseModel.findOneAndUpdate(
+        { _id: courseId },
+        { $addToSet: { learningModuleIds: learningModuleId } },
+        { new: true },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Error adding learning module to course',
+      );
+    }
   }
 }

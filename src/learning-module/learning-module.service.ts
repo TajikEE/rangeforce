@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateLearningModuleDto } from './dto/update-learning-module.dto';
@@ -21,41 +25,53 @@ export class LearningModuleService {
   async create(
     createLearningModuleDto: CreateLearningModuleDto,
   ): Promise<ResponseLearningModuleDto> {
-    return await this.learningModuleModel.create(createLearningModuleDto);
+    try {
+      return await this.learningModuleModel.create(createLearningModuleDto);
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating learning module');
+    }
   }
 
   async update(_id: string, updateLearningModuleDto: UpdateLearningModuleDto) {
-    return await this.learningModuleModel.findByIdAndUpdate(
-      _id,
-      updateLearningModuleDto,
-      { new: true },
-    );
+    try {
+      return await this.learningModuleModel.findByIdAndUpdate(
+        _id,
+        updateLearningModuleDto,
+        { new: true },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException('Error updating learning module');
+    }
   }
 
   async findByCategoryName(
     categoryName: string,
-  ): Promise<ResponseLearningModuleDto[]> {
-    const regex = new RegExp(categoryName, 'i');
-    const category = await this.categoryModel.findOne({
-      name: regex,
-    });
+  ): Promise<ResponseLearningModuleDto[] | NotFoundException> {
+    try {
+      const regex = new RegExp(categoryName, 'i');
+      const category = await this.categoryModel.findOne({
+        name: regex,
+      });
 
-    if (!category || !category.courseIds.length) {
-      throw new NotFoundException('Category not found or empty courses');
+      if (!category || !category.courseIds.length) {
+        return new NotFoundException('Category not found or empty courses');
+      }
+
+      const courses = await this.courseModel.find({
+        _id: { $in: category.courseIds },
+      });
+
+      const learningModules = await this.learningModuleModel.find({
+        _id: { $in: courses.flatMap((course) => course.learningModuleIds) },
+      });
+
+      if (!learningModules.length) {
+        return new NotFoundException('Learning modules not found');
+      }
+
+      return learningModules;
+    } catch (error) {
+      throw new InternalServerErrorException('Error finding learning modules');
     }
-
-    const courses = await this.courseModel.find({
-      _id: { $in: category.courseIds },
-    });
-
-    const learningModules = await this.learningModuleModel.find({
-      _id: { $in: courses.flatMap((course) => course.learningModuleIds) },
-    });
-
-    if (!learningModules.length) {
-      throw new NotFoundException('Learning modules not found');
-    }
-
-    return learningModules;
   }
 }

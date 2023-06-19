@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './schemas/category.schema';
@@ -16,28 +16,25 @@ export class CategoryService {
   async create(
     createCategoryDto: CreateCategoryDto,
   ): Promise<ResponseCategoryDto> {
-    const createdCategory = new this.categoryModel(createCategoryDto);
-    return await createdCategory.save();
+    try {
+      return await this.categoryModel.create(createCategoryDto);
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating category');
+    }
   }
 
   async addCourseToCategory(
     categoryId: string,
     courseId: string,
   ): Promise<ResponseCategoryDto> {
-    return await this.categoryModel.findOneAndUpdate(
-      { _id: categoryId },
-      { $addToSet: { courseIds: courseId } },
-      { new: true },
-    );
-  }
-
-  async getCategoryNames(categoryIds: string[]): Promise<string[]> {
-    const categories = await this.categoryModel
-      .find({
-        _id: { $in: categoryIds },
-      })
-      .exec();
-
-    return categories.map((category) => category.name);
+    try {
+      return await this.categoryModel.findOneAndUpdate(
+        { _id: categoryId },
+        { $addToSet: { courseIds: courseId } },
+        { new: true },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException('Error adding course to category');
+    }
   }
 }

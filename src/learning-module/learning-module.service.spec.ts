@@ -126,14 +126,14 @@ describe('LearningModuleService', () => {
       });
     });
 
-    it('should throw NotFoundException when category is not found', async () => {
+    it('should return NotFoundException when category is not found', async () => {
       const categoryName = 'Nonexistent Category';
 
       jest.spyOn(categoryModel, 'findOne').mockResolvedValue(null);
 
       await expect(
         service.findByCategoryName(categoryName),
-      ).rejects.toThrowError(NotFoundException);
+      ).resolves.toThrowError(NotFoundException);
       expect(categoryModel.findOne).toHaveBeenCalledWith({
         name: new RegExp(categoryName, 'i'),
       });

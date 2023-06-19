@@ -21,7 +21,7 @@ import {
 export class UsageController {
   constructor(private readonly usageService: UsageService) {}
 
-  @Post('/complete')
+  @Post('complete')
   @ApiBody({ type: CreateUsageDto })
   @ApiCreatedResponse({ type: ResponseUsageDto })
   create(@Body() createUsageDto: CreateUsageDto) {
