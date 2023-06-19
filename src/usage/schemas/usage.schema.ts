@@ -8,7 +8,7 @@ export class Usage {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'LearningModule' })
   learningModuleId: string;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' }) // there is no user model, use any mongo id to test
   userId: string;
 }
 

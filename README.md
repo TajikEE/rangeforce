@@ -11,15 +11,18 @@ Endpoints are created for the purpose of the required tasks, so it does not cont
 
 Category names are made unique because it seems logical that way. This also helps to index the field which makes it better to search by name.
 
-Category, course or learning module, anything can be created independently and later on relations can be made by updating cateogry or course as needed.
+Category, course or learning module, anything can be created independently and later on relations can be made by updating category or course as needed.
 
-There is swagger for easily navigating and checking the api endpoints. When the app is running locally, then it can be visited on: http://localhost:4001/api#/
+Note that the usage schema requires a userId, that is basically the learner id, but since this task does not include an auth flow so you can use any mongodb _id to fill it instead.
+
+There is swagger for easily checking the api endpoints. When the app is running locally, then it can be visited on: http://localhost:4001/api#/
 
 ## Setup and installation
 
 Create an .env file from .env.example
 
 ```bash
+$ cp .env.example .env
 $ yarn install
 ```
 
