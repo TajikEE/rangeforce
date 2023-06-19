@@ -88,7 +88,7 @@ describe('UsageController', () => {
 
       jest
         .spyOn(service, 'findTopUsedModulesOfMonth')
-        .mockResolvedValue(expectedResult);
+        .mockResolvedValue(expectedResult as any);
 
       const result = await controller.findTopUsedModulesOfMonth(limit);
 
