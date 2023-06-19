@@ -46,6 +46,14 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+Or if you prefer to run with docker:
+
+```bash
+# production mode
+$ docker build -t nestjs-app .
+$ docker run -d -p 4001:4001 nestjs-app
+```
+
 ## Test
 
 Some tests are written for controllers and services.
@@ -59,4 +67,12 @@ $ yarn run test:cov
 
 # to run specific tests, for example on usage (from project root):
 $ yarn test --testPathPattern=src/usage/usage.controller.spec.ts
+```
+
+If you previously ran with docker, then you can run the tests like this:
+```bash
+$ docker ps
+
+# Execute the tests in the container with container id from docker ps earlier
+$ docker exec -it <container_ide> yarn test
 ```
