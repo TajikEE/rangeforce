@@ -3,10 +3,11 @@
 Simple api service for creating learning modules, courses and categories.
 
 Tech:
-NestJs
-MongoDb
+* NestJs
+* MongoDb
 
-Assumptions made:
+### Assumptions made: ###
+
 Endpoints are created for the purpose of the required tasks, so it does not contain all CRUD functinoalities.
 
 Category names are made unique because it seems logical that way. This also helps to index the field which makes it better to search by name.
@@ -16,6 +17,12 @@ Category, course or learning module, anything can be created independently and l
 Note that the usage schema requires a userId, that is basically the learner id, but since this task does not include an auth flow so you can use any mongodb _id to fill it instead.
 
 There is swagger for easily checking the api endpoints. When the app is running locally, then it can be visited on: http://localhost:4001/api#/
+
+### Goals: ###
+
+* Listing of modules by category name : you can get modules by typing a category name with partial match and case incensitivity. For example: If category is 'Computer' you can search with 'comp' and still get result
+* TOP 10 used modules of the month : the top number is created as query param so you can change it to any number to get different total list items.
+
 
 ## Setup and installation
 
