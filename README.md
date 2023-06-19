@@ -20,8 +20,11 @@ There is swagger for easily checking the api endpoints. When the app is running 
 
 ### Goals: ###
 
-* Listing of modules by category name : you can get modules by typing a category name with partial match and case incensitivity. For example: If category is 'Computer' you can search with 'comp' and still get result
-* TOP 10 used modules of the month : the top number is created as query param so you can change it to any number to get different total list items.
+* Listing of modules by category name : you can get modules by typing a category name with partial match and case incensitivity. For example: If category is 'Computer' you can search with 'comp' and still get result. 
+*Try directly from swagger endpoint: /learning-module and query as 'computer'.*
+
+* TOP 10 used modules of the month : the top number is created as query param so you can change it to any number to get different total list items. 
+*Try directly from swagger endpoint: /usage/top and query as 10.*
 
 
 ## Setup and installation
